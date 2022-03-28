@@ -15,7 +15,9 @@ extern UART_HandleTypeDef huart3;
 
 SMS_STRUCT smsMsg[3];
 uint32_t simcom_timeout = 0;
-uint8_t simcom_state = SIM_STATE_READ;
+static uint8_t simcom_state = SIM_STATE_READ;
+static uint8_t next_state;
+static uint8_t reset_step = 0;
 
 sms_modem_t modem;
 
@@ -107,13 +109,6 @@ void hex_to_russian(char *dst, char *src, uint16_t len)
     dst[ptr] = 0;
 }
 
-
-void sms_modem_reset() {
-    HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_SET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_RESET);
-}
-
 uint8_t check_number(char *num) {
 	int i;
 
@@ -173,33 +168,60 @@ void sms_control_task() {
             
                 simcom_timeout = HAL_GetTick() + 2000;
                 simcom_state = SIM_STATE_DELAY;
+                next_state = SIM_STATE_READ;
             } else {
                 simcom_state = SIM_STATE_RESET;
+                reset_step = 0;
             }
             break;
         case SIM_STATE_RESET:
-            sms_modem_reset();
-
-            simcom_timeout = HAL_GetTick() + 5000;
-            simcom_state = SIM_STATE_INIT;
+        	switch (reset_step) {
+        	case 0:
+        	    HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_SET);
+        	    simcom_timeout = HAL_GetTick() + 4000;
+				simcom_state = SIM_STATE_DELAY;
+				next_state = SIM_STATE_RESET;
+                LOG_SIMCOM(LEVEL_DEBUG, "Reset step 0\n\r");
+        		reset_step++;
+        		break;
+        	case 1:
+        	    HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_RESET);
+        	    simcom_timeout = HAL_GetTick() + 8000;
+				simcom_state = SIM_STATE_DELAY;
+				next_state = SIM_STATE_RESET;
+                LOG_SIMCOM(LEVEL_DEBUG, "Reset step 1\n\r");
+        		reset_step++;
+        		break;
+        	case 2:
+        		HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_SET);
+				HAL_Delay(200);
+				HAL_GPIO_WritePin(GSM_POWER_GPIO_Port, GSM_POWER_Pin, GPIO_PIN_RESET);
+        	    simcom_timeout = HAL_GetTick() + 12000;
+				simcom_state = SIM_STATE_DELAY;
+				next_state = SIM_STATE_INIT;
+                LOG_SIMCOM(LEVEL_DEBUG, "Reset step 2\n\r");
+        		reset_step = 0;
+        		break;
+        	default:
+        		simcom_state = SIM_STATE_READ;
+        		reset_step = 0;
+        		break;
+        	}
             break;
         case SIM_STATE_INIT:
-            if (HAL_GetTick() < simcom_timeout) {
-                HAL_Delay(10);
-                break;
-            }
             USART_Start_receive(&huart3);
             modem.info.inited = SIMCOM_Init(&huart3);
             
             simcom_timeout = HAL_GetTick() + 2000;
             simcom_state = SIM_STATE_DELAY;
+            next_state = SIM_STATE_READ;
             break;
         case SIM_STATE_DELAY:
             if (HAL_GetTick() < simcom_timeout) {
                 HAL_Delay(10);
                 break;
             } else {
-                simcom_state = SIM_STATE_READ;
+                simcom_state = next_state;
             }
             break;
         default:

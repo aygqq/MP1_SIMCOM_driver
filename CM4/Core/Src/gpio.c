@@ -38,32 +38,49 @@
         * EVENT_OUT
         * EXTI
 */
-
-
-/* USER CODE BEGIN 2 */
 void MX_GPIO_Init(void)
 {
-	GPIO_InitTypeDef GPIO_InitStruct;
 
-	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOH_CLK_ENABLE();
-	__HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOE_CLK_ENABLE();
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOI_CLK_ENABLE();
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	/* Configure the GPIO_LED pin */
-	GPIO_InitStruct.Pin = GPIO_PIN_11;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	PERIPH_LOCK(GPIOH);
-	HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
-	PERIPH_UNLOCK(GPIOH);
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = GSM_POWER_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GSM_POWER_GPIO_Port, &GPIO_InitStruct);
+
+}
+
+/* USER CODE BEGIN 2 */
+//void MX_GPIO_Init(void)
+//{
+//	GPIO_InitTypeDef GPIO_InitStruct;
+//
+//	/* GPIO Ports Clock Enable */
+//	__HAL_RCC_GPIOH_CLK_ENABLE();
+//	__HAL_RCC_GPIOD_CLK_ENABLE();
+//	__HAL_RCC_GPIOG_CLK_ENABLE();
+//	__HAL_RCC_GPIOB_CLK_ENABLE();
+//	__HAL_RCC_GPIOF_CLK_ENABLE();
+//	__HAL_RCC_GPIOC_CLK_ENABLE();
+//	__HAL_RCC_GPIOE_CLK_ENABLE();
+//	__HAL_RCC_GPIOA_CLK_ENABLE();
+//	__HAL_RCC_GPIOI_CLK_ENABLE();
+//
+//	/* Configure the GPIO_LED pin */
+//	GPIO_InitStruct.Pin = GPIO_PIN_11;
+//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+//	GPIO_InitStruct.Pull = GPIO_PULLUP;
+//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+//	PERIPH_LOCK(GPIOH);
+//	HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+//	PERIPH_UNLOCK(GPIOH);
 
 //	GPIO_InitStruct.Pin = GPIO_PIN_12;
 //	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -89,10 +106,10 @@ void MX_GPIO_Init(void)
 //	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 //	PERIPH_UNLOCK(GPIOD);
 
-	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_11, GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_11, GPIO_PIN_RESET);
 //	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
 //	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
-}
+//}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

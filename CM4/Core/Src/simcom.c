@@ -5,6 +5,7 @@
 #include "simcom.h"
 #include "usart.h"
 
+//#include "wwdg.h"
 #include "main.h"
 #include "common.h"
 #include "sms_modem.h"
@@ -20,6 +21,8 @@ int RecvResponce(UART_HandleTypeDef *huart, char *responce, uint32_t millis) {
 	if (huart->Instance == USART3) {
 		while (!modem.flag_responce_recvd && HAL_GetTick() < delay) {
 			__NOP();
+
+//	        HAL_WWDG_Refresh(&hwwdg1);
 		}
 		if (!modem.flag_responce_recvd) {
 			modem.flag_wait_responce = 0;
@@ -89,7 +92,7 @@ uint8_t SIMCOM_Init(UART_HandleTypeDef *huart) {
 	char *pch;
 	uint16_t len;
 
-	LOG_SIMCOM(LEVEL_INFO, "Try initilize SIMCOM module\n\r");
+	LOG_SIMCOM(LEVEL_INFO, "Try initilize SIMCOM module bbbbbbbb\n\r");
 
 	LOG_SIMCOM(LEVEL_DEBUG, "Try initilize communication between STM32 & SIMCOM module\n\r");
 	if (SendCmd_Check(huart, "AT", "OK")) {

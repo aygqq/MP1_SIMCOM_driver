@@ -61,6 +61,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define GSM_POWER_Pin GPIO_PIN_11
+#define GSM_POWER_GPIO_Port GPIOH
 /* USER CODE BEGIN Private defines */
 #define DEFAULT_IRQ_PRIO      1U
 

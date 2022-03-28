@@ -36,7 +36,7 @@ void pc_send_short(uint8_t type, uint8_t data) {
 		pc.send_buf.data[ptr - 3] = 0xFD;
 	}
 
-	LOG_PC(LEVEL_INFO, "Send short\r\n");
+	LOG_PC(LEVEL_DEBUG, "Send short\r\n");
 	VIRT_UART_Transmit(&huart0, (uint8_t*) pc.send_buf.data, pc.send_buf.ptr);
 }
 
@@ -63,7 +63,7 @@ void pc_send_data(uint8_t type, uint8_t *buf_in, uint16_t length) {
 		pc.send_buf.data[ptr - 3] = 0xFD;
 	}
 
-	LOG_PC(LEVEL_INFO, "Send data\r\n");
+	LOG_PC(LEVEL_DEBUG, "Send data\r\n");
 	VIRT_UART_Transmit(&huart0, (uint8_t*) pc.send_buf.data, pc.send_buf.ptr);
 }
 

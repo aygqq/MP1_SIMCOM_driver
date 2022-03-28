@@ -13,14 +13,7 @@
 #define LEVEL_INFO      3
 #define LEVEL_DEBUG     4
 
-// #define LVL_SIMCOM_ERR  
-// #define LVL_SIMCOM_MAIN 
-// #define LVL_SIMCOM_INFO 
-// #define LVL_SIMCOM_DBG  
-
-
-
-// #define DEBUG_LEVEL     LEVEL_DEBUG
+//#define DEBUG_LEVEL     LEVEL_DEBUG
  #define DEBUG_LEVEL     LEVEL_INFO
 // #define DEBUG_LEVEL     LEVEL_MAIN
 #ifndef DEBUG_LEVEL
@@ -63,15 +56,15 @@
 #endif
 
 #ifdef DEBUG_USART
-    #define LOG_USART(idx, level, ...)  do {\
+    #define LOG_USART(level, ...)  do {\
         if (DEBUG_LEVEL >= level) {\
             PRINT_LEVEL(level);\
             printf("USART : ");\
-            log_info( __VA_ARGS__);\
+            printf( __VA_ARGS__);\
         }\
     } while (0)
 #else
-    #define LOG_USART(idx, level, ...)
+    #define LOG_USART(level, ...)
 #endif
 
 #ifdef DEBUG_PC
