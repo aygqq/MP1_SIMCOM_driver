@@ -4,7 +4,7 @@
 #include "main.h"
 
 
-#define BYTE_BUF_SIZE   512
+#define BYTE_BUF_SIZE   3000
 
 #define PHONE_SIZE      16
 

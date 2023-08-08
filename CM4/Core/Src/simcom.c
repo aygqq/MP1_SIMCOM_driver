@@ -62,6 +62,11 @@ static void SendCmd(UART_HandleTypeDef *huart, char *cmd, uint8_t wait_responce)
 	}
 
 	LOG_SIMCOM(LEVEL_DEBUG, "Send: %s\n\r", cmd);
+    
+    uart3_rx_buf.ptr = 0;
+    __HAL_DMA_DISABLE(huart3.hdmarx);
+    __HAL_DMA_SET_COUNTER(huart3.hdmarx, BYTE_BUF_SIZE);
+    __HAL_DMA_ENABLE(huart3.hdmarx);
 
 	USART_Send(huart, cmd, strlen(cmd));
 	USART_Send(huart, "\r\n", 2);
@@ -214,8 +219,15 @@ int SIMCOM_ReadSMS(UART_HandleTypeDef *huart, SMS_STRUCT *msg) {
 
 	if (recv->ptr < 5) {
 		LOG_SIMCOM(LEVEL_DEBUG, "No answer\n\r");
+        modem.error_recv_cnt++;
+        if (modem.error_recv_cnt > 20) {
+            LOG_SIMCOM(LEVEL_ERROR, "Many SMS recv errors, deleting all messages.\n\r");
+            SIMCOM_ClearSMS(huart);
+            modem.error_recv_cnt = 0;
+        }
 		return 0;
 	}
+    modem.error_recv_cnt = 0;
 
 	if (recv->ptr >= BYTE_BUF_SIZE - 1) {
 		LOG_SIMCOM(LEVEL_ERROR, "Recv buffer is full, deleting all messages.\n\r");

@@ -255,7 +255,7 @@ void USART_IDLE_handler(UART_HandleTypeDef *huart) {
 		{
 			if ((uart3_rx_buf.ptr > 5 && strstr((char *)&uart3_rx_buf.data[uart3_rx_buf.ptr - 5], "OK\r\n"))
                 || (uart3_rx_buf.ptr > 8 && strstr((char *)&uart3_rx_buf.data[uart3_rx_buf.ptr - 8], "ERROR\r\n"))
-                || (uart3_rx_buf.ptr > 15 && strnstr((char *)&uart3_rx_buf.data[4], "CMS ERROR", 11)))
+                || (uart3_rx_buf.ptr > 15 && strnstr((char *)&uart3_rx_buf.data[3], "CMS ERROR", 12)))
 			{
 				modem.flag_responce_recvd = 1;
 				LOG_USART(LEVEL_DEBUG, "Recv: (len %d) %s\n\r", uart3_rx_buf.ptr, uart3_rx_buf.data);

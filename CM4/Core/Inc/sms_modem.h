@@ -15,6 +15,7 @@ typedef struct sms_modem_s {
     volatile uint8_t    flag_wait_responce;
     volatile uint8_t	flag_responce_recvd;
     uint8_t             error_cnt;
+    uint8_t             error_recv_cnt;
 
     byte_buffer_t       recv_buf;
 } sms_modem_t;

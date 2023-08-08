@@ -163,6 +163,7 @@ void sms_control_task() {
                 {
                     LOG_SIMCOM(LEVEL_ERROR, "Modem will be reloaded\n\r");
                     modem.error_cnt = 0;
+                    modem.error_recv_cnt = 0;
                     modem.info.inited = 0;
                 }
             
